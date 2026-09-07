@@ -31,16 +31,18 @@ I do while I wait."
 
 ## Track B — store readiness checklist
 
-1. **Decide the Android package name / iOS bundle ID.** Permanent the moment the first build is
-   uploaded to Play Console — cannot be changed later without publishing as a brand-new app
-   listing. Needs your decision, not mine. Suggested default matching the existing brand:
-   `studio.kontor.kataleya` (reverse-DNS of `kontor.studio`) — flag if you want something else.
-2. **Write and publish the privacy policy.** Real gap, not yet started. Given the app's actual
-   architecture, the honest story is genuinely simple and a real selling point: room/exercises/
-   vault data never leaves the device; the sponsor-pairing relay only ever touches already-
-   encrypted ciphertext, never plaintext or metadata beyond what's needed for delivery. Needs
-   its own public URL (e.g. `kontor.studio/kataleya-privacy`) — I can draft this once you confirm
-   scope, but it should describe the app as it will actually ship, not aspirationally.
+1. **Package name — decided.** `studio.kontor.kataleya`, set in `app.json`. **Android-only for
+   now** (user's call) — no `ios.bundleIdentifier` needed until/unless iOS scope is revisited.
+2. **Privacy policy — drafted, not yet live.** `privacy-policy.md` in this repo. Describes the
+   real architecture (room/exercises/vault never leave the device; the sponsor-pairing relay only
+   ever touches already-encrypted ciphertext). Has a few bracketed placeholders that can't be
+   finalized until the app is actually built (exact relay retention window, final Android
+   permissions list, a real contact method) — re-verify against the shipped app before
+   publishing, this was written from the design, not from tested code. Needs a real public URL —
+   `kontor.studio/privacy` doesn't actually exist (confirmed live: it's the site's SPA catch-all
+   serving the homepage for any path), and `kontor-studio`'s own deploy pipeline is documented as
+   broken (`arc deploy`'s Cloudflare token is dead) — that needs fixing, or another host, before
+   this can go live.
 3. **Data Safety form prep** (Play Console's mandatory questionnaire). Same local-first story
    above makes this straightforward — mostly "no data collected," with the pairing feature's
    encrypted-transit case needing its own precise, honest answer.
@@ -55,9 +57,10 @@ I do while I wait."
      an actual device; can't screenshot a blank scaffold.
    - Short description (≤80 chars) + full description (≤4000 chars) — can draft anytime, the
      `kataleya` repo's README is a good starting source of real copy.
-6. **EAS build profiles.** Scaffolded as part of this pass (see below) — `development`/
-   `preview`/`production` profiles in `eas.json`. Actually building requires an Expo account
-   (`eas login`) — confirm whether one already exists or needs creating.
+6. **EAS build profiles.** Scaffolded — `development`/`preview`/`production` profiles in
+   `eas.json`. Checked live: the EAS CLI itself isn't installed on this machine
+   (`npm install -g eas-cli`), and no Expo account login exists yet (`eas login`) — real,
+   concrete next step, not yet done.
 7. **Signing.** Recommend EAS-managed Play App Signing (Google holds the signing key, EAS handles
    the upload key) — no manual keystore management, the standard modern default, nothing to set
    up ahead of time.
@@ -79,7 +82,7 @@ Full detail lives in `ROADMAP.md`. Quick map for sequencing against the mileston
 | 1 | Room screen + navigation shell (de-risk first — original app's failure point) |
 | 2 | Guided exercises (breathing, grounding, urge-surfing) |
 | 3 | The vault (local storage + PIN gating) |
-| 4 | Sponsor/sponsee pairing — **check the web-side redesign status first**, don't build against the old architecture |
+| 4 | Sponsor/sponsee pairing — redesign confirmed complete (2026-07-30, real Web Push via `kataleya-relay-worker`), no longer an open blocker |
 | 5 | Push notifications, offline polish, app store packaging |
 
 ## Milestones (sequenced, mixing both tracks)
@@ -91,29 +94,35 @@ Full detail lives in `ROADMAP.md`. Quick map for sequencing against the mileston
 - **M4 — First Internal Testing build in Play Console.** Requires ID verification cleared + M1–M3
   done. This is the real "it's in the store" milestone — doesn't need feature parity with web yet.
 - **M5 — Phases 2–3 complete**, promoted to Closed Testing with a few real testers.
-- **M6 — Phase 4** (pairing), only after confirming the web-side redesign has landed.
+- **M6 — Phase 4** (pairing) — redesign already confirmed landed, no longer gated on that.
 - **M7 — Phase 5 polish**, then Production release.
 
 ## Immediate to-do (no blockers, start now)
 
-- [ ] Decide package name / bundle ID (see suggestion above)
-- [ ] Draft + publish privacy policy at a public URL
-- [ ] Set `android.package` + `ios.bundleIdentifier` in `app.json` once decided
-- [ ] Confirm Expo/EAS account status (existing login, or needs creating)
+- [x] Decide package name — `studio.kontor.kataleya`, set in `app.json`
+- [x] Confirm scope — Android-only for now
+- [ ] Publish the drafted privacy policy at a real public URL (needs the `kontor-studio` deploy
+      pipeline fixed, or another host) — content is written, fill in the remaining placeholders
+      against the real shipped app first
+- [ ] `npm install -g eas-cli`, then `eas login` — neither done yet, checked live
 - [ ] Draft short + full store description from `kataleya`'s README copy
 - [ ] Verify existing icon assets meet current Play spec
 
 ## Open decisions / resources needed (not mine to decide silently)
 
-- **Package name / bundle ID** — permanent once set, your call.
-- **iOS scope** — this doc and the ask both center on Play Store; confirm whether Apple
-  Developer Program enrollment ($99/yr, separate from Google's process) is in scope too, or
-  Android-first for now.
-- **Feature graphic design** — real design work, not yet started.
+- **Feature graphic design** — real design work, not yet started. Not blocking — Play only
+  requires this at Closed/Open/Production track, not Internal Testing (M4).
 - **A physical Android test device** — Phase 1 explicitly needs this; simulator-only testing was
-  named in `ROADMAP.md` as the original app's failure mode.
-- **Send-a-light redesign status** — only blocks Phase 4, nothing before it.
+  named in `ROADMAP.md` as the original app's failure mode. Needed before M3, not before now.
 - **Expo/EAS account** — needed before any real build can be produced or submitted.
+
+## Where things actually stand (2026-09-07)
+
+Roughly **10% of the way to M4** (first Internal Testing build in Play Console) — most of the
+store-readiness paperwork (Track B) is tractable and largely unblocked, but no app code exists
+yet (Phase 1 is 0%), which is both the largest remaining chunk of work and the app's
+historically riskiest phase. Google's ID verification is an external, timeline-unknown gate on
+top of all of this regardless of how ready everything else is.
 
 ## Not a gap — already solved, don't rebuild
 

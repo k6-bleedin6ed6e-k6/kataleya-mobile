@@ -25,10 +25,9 @@ From the live web app, in priority order:
 2. **Guided exercises** — breathing (4-7-8 / box / coherent), 5-4-3-2-1 grounding, urge-surfing.
 3. **The vault** — a private, clinician-PIN-protected journal.
 4. **Sponsor/sponsee pairing ("send a light")** — real E2E-encrypted signal between two paired
-   devices. **This piece is being redesigned on the web side right now** (the current
-   manual-pairing + relay-worker architecture is getting simplified) — build this mobile version
-   against whatever that redesign lands on, not against today's web implementation. Check
-   `kontor-studio`'s GAMEPLAN.md for the redesign decision before starting this piece.
+   devices. **Redesign complete** (2026-07-30, real Web Push-based delivery via
+   `kataleya-relay-worker`, deployed and verified) — no longer an open blocker, build against the
+   current live architecture.
 
 ## Phases
 
