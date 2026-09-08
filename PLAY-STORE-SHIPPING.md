@@ -104,9 +104,18 @@ Full detail lives in `ROADMAP.md`. Quick map for sequencing against the mileston
 - [ ] Publish the drafted privacy policy at a real public URL (needs the `kontor-studio` deploy
       pipeline fixed, or another host) — content is written, fill in the remaining placeholders
       against the real shipped app first
-- [ ] `npm install -g eas-cli`, then `eas login` — neither done yet, checked live
+- [x] `npm install -g eas-cli` — done 2026-09-08, confirmed working (`eas-cli/23.2.0`)
+- [ ] `eas login` — needs your own Expo account (real credentials, not something I can do for you)
 - [ ] Draft short + full store description from `kataleya`'s README copy
-- [ ] Verify existing icon assets meet current Play spec
+- [x] **Icon assets — format-checked 2026-09-08, real gap: none.** `icon.png` 1024×1024 RGB (no
+      alpha — correct on purpose, matches Expo's own convention for the cross-platform `icon`
+      field; Apple rejects icons *with* alpha, so this isn't a mistake). Adaptive icon layers
+      (`android-icon-foreground/background.png`) 512×512 RGBA, `android-icon-monochrome.png`
+      432×432 RGBA — all correctly formatted with alpha, matching current Play spec (108×108dp
+      adaptive layers, monochrome optional-but-recommended). Play Console's own separate 512×512
+      hi-res store listing icon isn't independently verifiable without an actual EAS build/submit
+      attempt — this is a format sanity check, not a submission-tested pass. Re-verify once a
+      real build exists.
 
 ## Open decisions / resources needed (not mine to decide silently)
 
