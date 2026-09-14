@@ -120,14 +120,11 @@ From `PLAY-STORE-SHIPPING.md`, still accurate as of 2026-09-07:
 - [x] `npm install -g eas-cli` (24.3.0) + `eas login` (`b6ones6aw`) + `eas init` — project linked,
       real projectId in `app.json` (`ea0add28-a2af-4a15-8dde-8fa6f5cac030`) — **2026-09-14, M1 done**
 - [x] `npm install` — 464 packages, real `node_modules` now exists (was never installed before)
-- [~] Publish `privacy-policy.md` at a real public URL — page built and content-complete
-      (`kontor-studio/privacy.html`), root cause of the dead deploy pipeline found (`arc deploy`
-      was looking up a token named "arc-deploy", deleted from the CF account back on 2026-07-30 —
-      the real live token was sitting right there as "arc-deploy-workers" the whole time, `arc`
-      fixed to use the right name). **Genuinely blocked on one thing now**: that token is
-      Workers-scoped only, no Cloudflare Pages permission — needs Bonesaw to add
-      "Cloudflare Pages — Edit" to it (or a new token) in the CF dashboard. One command away
-      from live once that's done.
+- [x] Publish `privacy-policy.md` at a real public URL — **live at https://kontor.studio/privacy
+      as of 2026-09-14**, verified HTTP 200, real content confirmed (retention window text
+      present), contact email confirmed functional (Cloudflare's own Email Address Obfuscation
+      rewrites it in raw HTML but the decode script is present and correctly resolves it for real
+      visitors — expected site-wide behavior, not a bug). **M2 done.**
 - [x] Fill remaining bracketed placeholders in `privacy-policy.md` — retention window pulled from
       the real deployed relay worker's own source (`RELAY_TTL_SECONDS=86400` / 24h for messages,
       `SUBS_TTL_SECONDS=7776000` / 90d for push-subscription records, not guessed), contact method
