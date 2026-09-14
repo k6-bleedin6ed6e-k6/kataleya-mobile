@@ -54,17 +54,42 @@ whisper cycling, phase color system, mirror/vessel EKG rendering — is at risk 
 refactor. This is a personal instrument with real history in it; treat the existing build as a
 reference implementation to draw from, not disposable scaffolding.
 
-**Phase 1 — architecture decision, made concrete.** The web↔mobile shared-codebase question
-(`ROADMAP.md`'s old non-goal) needs an actual answer before either rebuild starts, not just
-"open for debate": single-file vanilla JS keeps the web app's zero-build, works-from-a-plain-
-offline-file property that's core to its privacy story — evaluate whether Expo Router's web
-target or React Native Web can preserve that property before adopting either, don't default to
-convenience over that guarantee.
+**Phase 1 — architecture decision, made concrete.** Design brief: *clean, inevitable, just works,
+self-healing, useful, alive — an elegant, inevitable living/breathing organism.* Concretely for
+architecture, "self-healing" is the load-bearing word here: fewer things that can stay broken, no
+dependency chain to snap, no build step to fail, no app-store review gate between a fix and the
+phone in Bonesaw's hand. The current web app already has this almost by accident — single file,
+no build step, service worker just re-caches on next load. That property is not a limitation to
+graduate out of; it **is** the self-healing mechanism. Default position: don't replace the web
+core with a native rebuild — layer the minimum native surface on top of it that actually earns its
+complexity. Push notifications for the pairing "light arrived" case is the one candidate raised so
+far worth that trade (native has a real, mobile-only capability there — background delivery the
+current web PWA can't do). Everything else defaults to staying in the self-healing web core unless
+a concrete capability gap forces the trade, not because native "feels more like an app."
+`ROADMAP.md`'s old non-goal (no shared codebase between web and mobile) stays the default too —
+don't reach for React Native Web / Expo Router web target just to avoid writing two
+implementations; that abstraction layer is exactly the kind of thing that erodes the self-healing
+property for the sake of not repeating yourself.
 
-**Phase 2 — room, reimagined first.** Same sequencing logic as the original roadmap (de-risk the
-emotionally central screen before anything else), but now against the deepened personal-first
-brief rather than a generic port. This is where visual direction gets decided in practice, not
-just discussed.
+**Phase 2 — room, reimagined first.** Same design brief applied to the room screen specifically:
+
+- *Alive* / *inevitable* — the room's state should keep moving while the app is closed, not only
+  compute fresh the instant it's opened. Right now growth stages, mood trends, and the whisper
+  cycle are all rendered live off stored data; "alive" means the room reflects what happened while
+  Bonesaw was away without being asked — an organism that grew or wilted unwatched, not one that
+  only changes when tended.
+- *Inevitable* also means killing the four discrete phase buckets (`choice`/`desire`/
+  `still-pine`/`nyx`) as hard-cut states. Interpolate continuously — color, whisper tone, orb
+  behavior all drifting against real time rather than snapping at phase boundaries.
+- *Just works* / *elegant* — audit `screen-settings` hard. Every toggle or confirmation dialog
+  that isn't PIN/security-critical is friction the organism metaphor doesn't survive; anything the
+  app can already infer from stored state shouldn't be a question to the user.
+- *Useful* is the guardrail against the metaphor eating the function — the real test for every
+  change in this phase: does it make a bad moment (2am, mid-craving) easier, or does it just make
+  a good moment prettier. Beauty that doesn't clear that bar gets deprioritized.
+- Room should draw on the mirror/vault/scars data that already exists rather than that logic
+  living only in the separate butterfly-overlay bolt-on — a rough week should show up as weight in
+  the room itself, not just in a dedicated overlay screen.
 
 **Phase 3 — the ritual screens.** Bridge, cocoon, terminal, mirror — the screens that give the
 app its distinct voice. Carry forward specific mechanics worth keeping deliberately (re-entry
@@ -92,15 +117,27 @@ From `PLAY-STORE-SHIPPING.md`, still accurate as of 2026-09-07:
 
 - [x] Package name decided — `studio.kontor.kataleya`
 - [x] Android-only scope confirmed
-- [ ] `npm install -g eas-cli`, then `eas login` — neither done
-- [ ] Publish `privacy-policy.md` at a real public URL — blocked on `kontor-studio`'s deploy
-      pipeline (`arc deploy`'s Cloudflare token is dead as of 2026-08-22) or an alternate host
-- [ ] Fill remaining bracketed placeholders in `privacy-policy.md` (relay retention window, final
-      Android permissions list, real contact method) — some can't be finalized until Track A
-      code exists; retention window and contact method could be answered now
+- [x] `npm install -g eas-cli` (24.3.0) + `eas login` (`b6ones6aw`) + `eas init` — project linked,
+      real projectId in `app.json` (`ea0add28-a2af-4a15-8dde-8fa6f5cac030`) — **2026-09-14, M1 done**
+- [x] `npm install` — 464 packages, real `node_modules` now exists (was never installed before)
+- [~] Publish `privacy-policy.md` at a real public URL — page built and content-complete
+      (`kontor-studio/privacy.html`), root cause of the dead deploy pipeline found (`arc deploy`
+      was looking up a token named "arc-deploy", deleted from the CF account back on 2026-07-30 —
+      the real live token was sitting right there as "arc-deploy-workers" the whole time, `arc`
+      fixed to use the right name). **Genuinely blocked on one thing now**: that token is
+      Workers-scoped only, no Cloudflare Pages permission — needs Bonesaw to add
+      "Cloudflare Pages — Edit" to it (or a new token) in the CF dashboard. One command away
+      from live once that's done.
+- [x] Fill remaining bracketed placeholders in `privacy-policy.md` — retention window pulled from
+      the real deployed relay worker's own source (`RELAY_TTL_SECONDS=86400` / 24h for messages,
+      `SUBS_TTL_SECONDS=7776000` / 90d for push-subscription records, not guessed), contact method
+      confirmed by Bonesaw (his email). Only the Android permissions section stays a placeholder,
+      honestly — can't be known until Phase 1+ code exists.
 - [ ] Draft short (≤80 char) + full (≤4000 char) Play Store descriptions
-- [ ] Verify existing icon/adaptive-icon assets meet current Play spec
-- [ ] `eas.json` build profiles — scaffolded but unverified against current EAS CLI
+- [x] Verify existing icon/adaptive-icon assets meet current Play spec — re-verified live
+      2026-09-14, matches the 2026-09-08 finding exactly (1024×1024 RGB icon, 512×512 RGBA
+      adaptive layers, 432×432 RGBA monochrome)
+- [x] `eas.json` build profiles — confirmed present and valid against current EAS CLI (24.3.0)
 
 **Caution:** several of these (store description copy, "what this app does" framing, content
 rating answers) are downstream of the open decision above — a personal-instrument reimagining may

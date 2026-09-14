@@ -1,8 +1,6 @@
 # Kataleya — Privacy Policy
 
-*Draft, 2026-09-07 — ready to publish once deployed to a public URL. Not yet live anywhere.*
-
-**Last updated:** [date of actual publish]
+**Last updated:** 2026-09-14
 
 ## The short version
 
@@ -32,8 +30,10 @@ your two devices so a "light" can arrive even when both apps aren't open at the 
 - We operate a small relay service (a Cloudflare Worker) that helps deliver this encrypted
   message and enables push notifications. This relay only ever handles already-encrypted
   ciphertext — it cannot read the content of what's sent, and does not need to.
-- The relay retains delivery data only as long as needed for delivery (recent-history window),
-  then it's cleared. [Confirm and state the exact retention window before publishing.]
+- The relay retains the encrypted message itself for up to 24 hours (enough time to deliver it if
+  the recipient's device was briefly offline), then it's automatically deleted. Push-notification
+  subscription records (which device to notify — not message content) are kept for up to 90 days
+  of inactivity, then automatically deleted.
 - If you never use the pairing feature, none of this applies to you at all.
 
 ## What we don't do
@@ -60,21 +60,15 @@ be described in the app's own release notes.
 
 ## Contact
 
-[Add a real contact — email or a contact page URL — required by Play Store's Data Safety form
-and generally expected on any published privacy policy.]
+For questions about this privacy policy, contact: robincoffins66@gmail.com
 
 ---
 
 ## Notes for whoever publishes this (not part of the public policy text)
 
-- **Not yet live.** Needs a real public URL — the earlier check this session confirmed
-  `kontor.studio/privacy` doesn't actually exist (SPA catch-all serving the homepage for any
-  path). Either fix that route in the `kontor-studio` repo, or publish this at a dedicated path
-  (e.g. `kontor.studio/kataleya-privacy`) once the deploy pipeline works — `arc deploy`'s
-  Cloudflare token is documented as dead as of 2026-08-22, that needs fixing first or a manual
-  Cloudflare Pages upload used instead.
-- Bracketed `[...]` placeholders above need real answers before this goes live — the relay's
-  exact data-retention window, the final permissions list (can't be known until the app is
-  actually built), and a real contact method.
+- **Page built, content complete, not yet live.** `kontor-studio/privacy.html` has this content
+  in full (retention window pulled from the real relay worker's own source, not guessed; contact
+  confirmed by Bonesaw). Deploy is genuinely one command away — blocked on the CF Pages token
+  permission fix, see `notes/GAMEPLAN.md`'s Track B checklist for the exact fix needed.
 - This describes the architecture as designed per `ROADMAP.md`/`kataleya`'s README — re-verify
   against the actual shipped app before publishing, don't publish this from intent alone.
