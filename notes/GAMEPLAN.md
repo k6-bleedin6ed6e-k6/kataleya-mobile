@@ -48,11 +48,11 @@ Feature set and full visual direction are still to be designed in detail (that's
 conversation, not a Claude Code task) — but the frame is now set, so here's a real phase plan
 Claude Code can start sequencing against as design decisions land, rather than a placeholder.
 
-**Phase 0 — keep, don't discard.** Before any rebuild code: archive/tag the current `index.html`
-as-is (e.g. a `legacy-web` branch or tag) so nothing in the existing ritual — ouroboros animation,
-whisper cycling, phase color system, mirror/vessel EKG rendering — is at risk of being lost mid-
-refactor. This is a personal instrument with real history in it; treat the existing build as a
-reference implementation to draw from, not disposable scaffolding.
+**Phase 0 — keep, don't discard. ✅ done 2026-09-08.** `index.legacy.html` is a byte-identical
+archive of the pre-rebuild `index.html`, made before any edits — nothing in the existing ritual
+(ouroboros animation, whisper cycling, phase color system, mirror/vessel EKG rendering) is at
+risk. Treat `index.legacy.html` as the reference implementation to draw from going forward, keep
+it un-edited.
 
 **Phase 1 — architecture decision, made concrete.** Design brief: *clean, inevitable, just works,
 self-healing, useful, alive — an elegant, inevitable living/breathing organism.* Concretely for
@@ -73,14 +73,23 @@ property for the sake of not repeating yourself.
 
 **Phase 2 — room, reimagined first.** Same design brief applied to the room screen specifically:
 
-- *Alive* / *inevitable* — the room's state should keep moving while the app is closed, not only
-  compute fresh the instant it's opened. Right now growth stages, mood trends, and the whisper
-  cycle are all rendered live off stored data; "alive" means the room reflects what happened while
-  Bonesaw was away without being asked — an organism that grew or wilted unwatched, not one that
-  only changes when tended.
-- *Inevitable* also means killing the four discrete phase buckets (`choice`/`desire`/
-  `still-pine`/`nyx`) as hard-cut states. Interpolate continuously — color, whisper tone, orb
-  behavior all drifting against real time rather than snapping at phase boundaries.
+- ✅ **Shipped 2026-09-08 — color field, continuous.** `applyPhaseVars()` now blends `--accent`/
+  `--shadow`/`--highlight`/`--ambient`/`--rim` continuously across each phase's transition window
+  (new `interpolatedPhaseVars()`, hex RGB lerp, ticked every 15s instead of the old 60s discrete
+  check) instead of hard-cutting at the boundary — verified it lands exactly on the original hex
+  values at each boundary (`t=0.00`/`t=1.00`), so nothing about the existing palette actually
+  changed, it just stopped snapping. Deliberately scoped narrow: `state.phase`, `displayName`,
+  `existential` copy, and the whisper set still snap discretely (text can't blend) — only color
+  changed. A manual `/phase` override still applies its exact static colors, no blending — that's
+  a deliberate discrete choice, not something to smooth over. `palette()` itself (still used by
+  ~10 other call sites for discrete logic) is untouched. `breathMs` exists in the phase data but
+  isn't wired to any animation in the current build, so orb *behavior* (not just color) drifting
+  with time is still open — next candidate for this bullet, not done yet.
+- *Alive* / *inevitable*, continued — the room's state should keep moving while the app is closed,
+  not only compute fresh the instant it's opened. Right now growth stages, mood trends, and the
+  whisper cycle are all rendered live off stored data; "alive" means the room reflects what
+  happened while Bonesaw was away without being asked — an organism that grew or wilted unwatched,
+  not one that only changes when tended. Not started.
 - *Just works* / *elegant* — audit `screen-settings` hard. Every toggle or confirmation dialog
   that isn't PIN/security-critical is friction the organism metaphor doesn't survive; anything the
   app can already infer from stored state shouldn't be a question to the user.
