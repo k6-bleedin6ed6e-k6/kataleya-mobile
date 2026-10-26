@@ -1,17 +1,22 @@
-# kataleya-mobile
+# Kataleya Mobile — native app scaffold
 
-⚠️ **This is an empty scaffold, not the real Kataleya app.** `App.js` is still the untouched Expo
-starter template. See [`ROADMAP.md`](./ROADMAP.md) for what this repo is actually for (a planned
-future native rewrite) and why it exists alongside the real app.
+**Status: scaffold only.** `App.js` is still the Expo starter screen. This repository does not
+contain the current Kataleya product and has no verified, installable iOS or Android release.
+The configured Android package name is not evidence of a shipped Android build; no iOS bundle ID
+or Apple signing setup is verified here.
 
-**The real, working Kataleya app is here instead:**
-- Web (the actual product): https://kontor.studio/kataleya-demo/ — source: [`kataleya`](https://github.com/kwasikontor45/kataleya)
-- Android (installable APK, wraps the web app above): [`kataleya-android`](https://github.com/kwasikontor45/kataleya-android)
+## Current product and related projects
 
-An early APK built from this repo's empty template was mistakenly published as if it were the
-real app on 2026-09-22, then caught and relabeled "SUPERSEDED — do not install" on GitHub once
-noticed. Don't build/ship an APK from this repo until `App.js` actually has real functionality in
-it — check the file yourself before assuming otherwise, same mistake, don't repeat it.
+- **Use the web app:** <https://kontor.studio/kataleya-demo/>
+- **Maintained web source:** [`kontor-studio/kataleya-demo/`](https://github.com/kwasikontor45/kontor-studio/tree/main/kataleya-demo)
+- **Product resources and release guidance:** <https://kontor.studio/kataleya-resources.html>
+- **Android TWA configuration:** [`kataleya-android`](https://github.com/kwasikontor45/kataleya-android)
+- **Historical standalone PWA:** [`kataleya`](https://github.com/kwasikontor45/kataleya)
 
-See [`PLAY-STORE-SHIPPING.md`](./PLAY-STORE-SHIPPING.md) for the Play Store plan (currently
-blocked on identity verification either way, independent of this repo's status).
+The roadmap is a planning document, not a current feature specification. Recheck its technical
+and privacy assumptions against the maintained web source before starting a native port. Do not
+build, install, or distribute this Expo starter as Kataleya.
+
+## License
+
+See [`LICENSE`](./LICENSE). The name and branding are not granted by the code license.
